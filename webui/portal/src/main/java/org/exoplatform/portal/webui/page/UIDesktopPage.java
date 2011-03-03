@@ -77,13 +77,10 @@ public class UIDesktopPage extends UIPage
 
    public List<PageNavigation> getNavigations() throws Exception
    {
-      List<PageNavigation> allNav = Util.getUIPortal().getNavigations();
       String removeUser = Util.getPortalRequestContext().getRemoteUser();
       List<PageNavigation> result = new ArrayList<PageNavigation>();
-      for (PageNavigation nav : allNav)
-      {
-         result.add(PageNavigationUtils.filter(nav, removeUser));
-      }
+      PageNavigation nav = Util.getUIPortal().getNavigation();
+      result.add(PageNavigationUtils.filter(nav, removeUser));
       return result;
    }
 
