@@ -173,8 +173,6 @@ public class UIPageNavigationForm extends UIForm
          UIPortalApplication uiPortalApp = Util.getUIPortalApplication();
          updateNavPriority(uiPortalApp.getNavigations(), pageNav);
 
-         uiPortalApp.localizeNavigations();
-
          UIPopupWindow uiPopup = uiForm.getParent();
          uiPopup.setShow(false);
          UIComponent opener = uiPopup.getParent();

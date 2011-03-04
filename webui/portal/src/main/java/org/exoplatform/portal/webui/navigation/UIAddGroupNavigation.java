@@ -159,7 +159,6 @@ public class UIAddGroupNavigation extends UIContainer
 
          uiPortalApp.getUserPortalConfig().getNavigations().add(0, pageNav);
          uiPortalApp.getNavigations().add(0, pageNav);
-         uiPortalApp.localizeNavigations();
          
          //Update group navigation list
          ctx.addUIComponentToUpdateByAjax(uicomp);
