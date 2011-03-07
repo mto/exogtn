@@ -31,10 +31,10 @@ import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,7 +59,7 @@ public class UIUserToolBarGroupPortlet extends UIPortletApplication
       List<UserNavigation> groupNav = new ArrayList<UserNavigation>();
       for (UserNavigation nav : allNavs)
       {
-         if (nav.getNavigation().getKey().getType().equals(SiteType.GROUP))
+         if (nav.getKey().getType().equals(SiteType.GROUP))
          {
             groupNav.add(nav);
          }
