@@ -283,6 +283,11 @@ public class UIPageBrowser extends UISearch
          PageListAccess datasource = (PageListAccess)repeater.getDataSource();
          int currentPage = datasource.getCurrentPage();
 
+         //Update navigation and UserToolbarGroupPortlet if deleted page is dashboard page
+         if(page.getOwnerType().equals(PortalConfig.USER_TYPE)){
+            removePageNode(page, event);
+         }
+
          dataService.remove(page);
          //Minh Hoang TO: The cached UIPage objects corresponding to removed Page should be removed here.
          //As we have multiple UIPortal, which means multiple caches of UIPage. It 's unwise to garbage
@@ -308,11 +313,6 @@ public class UIPageBrowser extends UISearch
                currentPage = datasource.getAvailablePage();
             datasource.getPage(currentPage);
             event.getRequestContext().addUIComponentToUpdateByAjax(uiPageBrowser);
-         }
-         
-         //Update navigation and UserToolbarGroupPortlet if deleted page is dashboard page
-         if(page.getOwnerType().equals(PortalConfig.USER_TYPE)){
-            removePageNode(page, event);
          }
       }
       
@@ -344,7 +344,7 @@ public class UIPageBrowser extends UISearch
 
                // Update navigation and UserToolbarGroupPortlet
 
-               String pageRef = userNode.getPageRef();
+               String pageRef = page.getPageId();
                if (pageRef != null && pageRef.length() > 0)
                {
                   // Remove from cache
