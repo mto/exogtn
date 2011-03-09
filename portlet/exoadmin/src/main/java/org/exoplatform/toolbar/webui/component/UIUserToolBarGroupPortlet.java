@@ -19,7 +19,6 @@
 
 package org.exoplatform.toolbar.webui.component;
 
-import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.mop.navigation.Scope;
 import org.exoplatform.portal.mop.user.UserNavigation;
@@ -31,7 +30,6 @@ import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -79,9 +77,9 @@ public class UIUserToolBarGroupPortlet extends UIPortletApplication
       return Collections.emptyList();
    }
 
-   public PageNode getSelectedPageNode() throws Exception
+   public UserNode getSelectedNode() throws Exception
    {
-      return Util.getUIPortal().getSelectedNode();
+      return Util.getUIPortal().getNavPath().getTarget();
    }
 
    private UserPortal getUserPortal()

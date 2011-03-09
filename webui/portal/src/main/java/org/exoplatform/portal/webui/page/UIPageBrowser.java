@@ -32,6 +32,11 @@ import org.exoplatform.portal.config.model.Page;
 import org.exoplatform.portal.config.model.PageNavigation;
 import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.config.model.PortalConfig;
+import org.exoplatform.portal.mop.SiteKey;
+import org.exoplatform.portal.mop.navigation.Scope;
+import org.exoplatform.portal.mop.user.UserNavigation;
+import org.exoplatform.portal.mop.user.UserNode;
+import org.exoplatform.portal.mop.user.UserPortal;
 import org.exoplatform.portal.webui.application.UIPortlet;
 import org.exoplatform.portal.webui.portal.PageNodeEvent;
 import org.exoplatform.portal.webui.portal.UIPortal;
@@ -323,58 +328,35 @@ public class UIPageBrowser extends UISearch
        */
       private void removePageNode(Page page, Event<UIPageBrowser> event) throws Exception
       {
-         UIPageBrowser uiPageBrowser = event.getSource();
-         DataStorage dataService = uiPageBrowser.getApplicationComponent(DataStorage.class);
-
-         PageNavigation pageNavigation = null;
          UIPortalApplication portalApplication = Util.getUIPortalApplication();
+         UserPortal userPortal = portalApplication.getUserPortalConfig().getUserPortal();
 
-         List<PageNavigation> listPageNavigation = portalApplication.getNavigations();
+         UserNavigation userNav = userPortal.getNavigation(SiteKey.user(event.getRequestContext().getRemoteUser()));
+         UserNode rootNode = userPortal.getNode(userNav, Scope.CHILDREN);
 
-         for (PageNavigation pageNvg : listPageNavigation)
+         for (UserNode userNode : rootNode.getChildren())
          {
-            if (pageNvg.getOwnerType().equals(PortalConfig.USER_TYPE))
+            if (page.getPageId().equals(userNode.getPageRef()))
             {
-               pageNavigation = pageNvg;
-               break;
+               // Remove pageNode
+               rootNode.removeChild(userNode.getName());
+               rootNode.save();
+
+               // Update navigation and UserToolbarGroupPortlet
+
+               String pageRef = userNode.getPageRef();
+               if (pageRef != null && pageRef.length() > 0)
+               {
+                  // Remove from cache
+                  UIPortal uiPortal = Util.getUIPortal();
+                  uiPortal.clearUIPage(pageRef);
+               }
+
+               //Update UserToolbarGroupPortlet
+               UIWorkingWorkspace uiWorkingWS = portalApplication.getChild(UIWorkingWorkspace.class);
+               uiWorkingWS.updatePortletsByName("UserToolbarDashboardPortlet");
+               return;
             }
-         }
-         UIPortal uiPortal = Util.getUIPortal();
-
-         PageNode tobeRemoved = null;
-         List<PageNode> nodes = pageNavigation.getNodes();
-         for (PageNode pageNode : nodes)
-         {
-            String pageReference = pageNode.getPageReference();
-            String pageId = page.getPageId();
-
-            if (pageReference != null && pageReference.equals(pageId))
-            {
-               tobeRemoved = pageNode;
-               break;
-            }
-         }
-
-         if (tobeRemoved != null)
-         {
-            // Remove pageNode
-            pageNavigation.getNodes().remove(tobeRemoved);
-
-            // Update navigation and UserToolbarGroupPortlet
-
-            String pageRef = tobeRemoved.getPageReference();
-            if (pageRef != null && pageRef.length() > 0)
-            {
-               // Remove from cache
-               uiPortal.clearUIPage(pageRef);
-            }
-
-            dataService.save(pageNavigation);
-
-            //Update UserToolbarGroupPortlet
-            UIWorkingWorkspace uiWorkingWS = portalApplication.getChild(UIWorkingWorkspace.class);
-            uiWorkingWS.updatePortletsByName("UserToolbarDashboardPortlet");
-
          }
       }
    }
