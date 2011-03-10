@@ -348,7 +348,6 @@ public class UIPortalForm extends UIFormTabPane
          UIPortalForm uiForm = event.getSource();
          PortalRequestContext pcontext = (PortalRequestContext)event.getRequestContext();
          String template = "classic";
-//         String template = uiForm.getChild(UIFormInputItemSelector.class).getSelectedItemOption().getValue().toString();
          String portalName = uiForm.getUIStringInput(FIELD_NAME).getValue();
          DataStorage dataService = uiForm.getApplicationComponent(DataStorage.class);
          PortalConfig config = dataService.getPortalConfig(portalName);
@@ -364,9 +363,7 @@ public class UIPortalForm extends UIFormTabPane
          UserPortalConfig userPortalConfig = service.getUserPortalConfig(portalName, pcontext.getRemoteUser());
          PortalConfig pconfig = userPortalConfig.getPortalConfig();
          uiForm.invokeSetBindingBean(pconfig);
-         PageNavigation navigation = dataService.getPageNavigation(PortalConfig.PORTAL_TYPE, portalName);
          dataService.save(pconfig);
-         dataService.save(navigation);
          UIPortalApplication uiPortalApp = event.getSource().getAncestorOfType(UIPortalApplication.class);
          UIMaskWorkspace uiMaskWS = uiPortalApp.getChildById(UIPortalApplication.UI_MASK_WS_ID);
          uiMaskWS.setUIComponent(null);
