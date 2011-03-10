@@ -29,8 +29,6 @@ import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.portal.config.UserPortalConfigService;
 import org.exoplatform.portal.config.model.ModelObject;
 import org.exoplatform.portal.config.model.Page;
-import org.exoplatform.portal.config.model.PageNavigation;
-import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.navigation.Scope;
@@ -62,8 +60,8 @@ import org.exoplatform.webui.core.UIVirtualList;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputItemSelector;
 import org.exoplatform.webui.form.UIFormInputSet;
@@ -295,11 +293,11 @@ public class UIPageBrowser extends UISearch
          //removed
          
          UIPortal uiPortal = Util.getUIPortal();
-         if (uiPortal.getSelectedNode().getPageReference().equals(page.getPageId()))
+         UserNode userNode = uiPortal.getSelectedUserNode();
+         if (userNode.getPageRef().equals(page.getPageId()))
          {
             PageNodeEvent<UIPortal> pnevent =
-               new PageNodeEvent<UIPortal>(uiPortal, PageNodeEvent.CHANGE_PAGE_NODE, uiPortal.getSelectedNode()
-                  .getUri());
+               new PageNodeEvent<UIPortal>(uiPortal, PageNodeEvent.CHANGE_PAGE_NODE, userNode.getURI());
             uiPortal.broadcast(pnevent, Phase.PROCESS);
          }
          else
