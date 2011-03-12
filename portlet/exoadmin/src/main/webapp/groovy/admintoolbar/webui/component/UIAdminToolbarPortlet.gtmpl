@@ -1,7 +1,6 @@
 <%	
 	import org.exoplatform.toolbar.webui.component.UIAdminToolbarPortlet;
 	import org.exoplatform.web.application.JavascriptManager;
-	import org.exoplatform.portal.config.model.PageNavigation;
 	import org.exoplatform.services.organization.User;
 	import org.exoplatform.services.security.ConversationState;
 	import org.exoplatform.web.CacheUserProfileFilter;

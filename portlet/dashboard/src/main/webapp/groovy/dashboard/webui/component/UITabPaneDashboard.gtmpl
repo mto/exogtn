@@ -1,22 +1,18 @@
 <%
 	import java.util.ArrayList; 
-	import org.exoplatform.portal.config.model.PageNavigation;
-	import org.exoplatform.portal.config.model.PageNode;
 	import org.exoplatform.portal.webui.util.Util;
 	import org.exoplatform.portal.webui.portal.UIPortal;
 	import org.exoplatform.portal.application.PortalRequestContext;
 	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.portal.mop.user.UserNode;
 	
-	//PageNavigation pageNavigation = uicomponent.getPageNavigation();
-	//ArrayList<PageNode> nodes = pageNavigation.getNodes();
 	def nodes = uicomponent.getSameSiblingsNode();
 	def tabNbs = nodes.size();
 
 	PortalRequestContext pcontext = Util.getPortalRequestContext();	
 	def String portalURI = pcontext.getPortalURI();
 
-	PageNode selectedNode = Util.getUIPortal().getSelectedNode();
+	def selectedNode = Util.getUIPortal().getSelectedUserNode();
 	
 	JavascriptManager jsManager = pcontext.getJavascriptManager();
 	jsManager.importJavascript("eXo.webui.UITabbedDashboard");
@@ -33,7 +29,7 @@
 									for(UserNode node : nodes){
 							 		String tabLabel = node.getResolvedLabel();
 									String param = node.getName();
-									if(node.getURI().equals(selectedNode.getUri())){ 
+									if(node.getURI().equals(selectedNode.getURI())){ 
 		  						%>
 								<div class="UITab GrayTabStyle">
 										<div class="SelectedTab">
