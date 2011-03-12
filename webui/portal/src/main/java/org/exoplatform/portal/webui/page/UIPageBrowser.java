@@ -34,6 +34,7 @@ import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.navigation.Scope;
 import org.exoplatform.portal.mop.user.UserNavigation;
 import org.exoplatform.portal.mop.user.UserNode;
+import org.exoplatform.portal.mop.user.UserNodePredicate;
 import org.exoplatform.portal.mop.user.UserPortal;
 import org.exoplatform.portal.webui.application.UIPortlet;
 import org.exoplatform.portal.webui.portal.PageNodeEvent;
@@ -330,7 +331,7 @@ public class UIPageBrowser extends UISearch
          UserPortal userPortal = portalApplication.getUserPortalConfig().getUserPortal();
 
          UserNavigation userNav = userPortal.getNavigation(SiteKey.user(event.getRequestContext().getRemoteUser()));
-         UserNode rootNode = userPortal.getNode(userNav, Scope.CHILDREN);
+         UserNode rootNode = userPortal.getNode(userNav, userPortal.createScope(1, UserNodePredicate.builder().build()));               
 
          for (UserNode userNode : rootNode.getChildren())
          {
