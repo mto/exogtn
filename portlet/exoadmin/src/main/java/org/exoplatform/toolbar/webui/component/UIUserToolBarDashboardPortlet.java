@@ -145,8 +145,7 @@ public class UIUserToolBarDashboardPortlet extends UIPortletApplication
 
             UserNode rootNode = userPortal.getNode(userNav, toolBarPortlet.TOOLBAR_DASHBOARD_SCOPE);          
             UserNode tabNode = rootNode.addChild(_nodeName);
-            tabNode.setLabel(prContext.getApplicationResourceBundle().getString("UIUserToolBarDashboard.page.ClickAndType"));
-            tabNode.setName(_nodeName);            
+            tabNode.setLabel(prContext.getApplicationResourceBundle().getString("UIUserToolBarDashboard.page.ClickAndType"));           
             tabNode.setPageRef(page.getPageId());
 
             rootNode.save();            
