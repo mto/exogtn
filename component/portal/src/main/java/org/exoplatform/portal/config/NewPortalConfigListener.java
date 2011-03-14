@@ -32,6 +32,7 @@ import org.exoplatform.portal.config.model.PageNavigation;
 import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.config.model.PortalConfig;
 import org.exoplatform.portal.config.model.Page.PageSet;
+import org.exoplatform.portal.pom.config.POMSessionManager;
 import org.gatein.common.logging.Logger;
 import org.gatein.common.logging.LoggerFactory;
 import org.jibx.runtime.*;
@@ -84,7 +85,10 @@ public class NewPortalConfigListener extends BaseComponentPlugin
    /** . */
    private Logger log = LoggerFactory.getLogger(getClass());
 
-   public NewPortalConfigListener(DataStorage dataStorage, ConfigurationManager cmanager, InitParams params)
+   /** . */
+   private final POMSessionManager pomMgr;
+
+   public NewPortalConfigListener(POMSessionManager pomMgr, DataStorage dataStorage, ConfigurationManager cmanager, InitParams params)
       throws Exception
    {
       cmanager_ = cmanager;
@@ -125,6 +129,7 @@ public class NewPortalConfigListener extends BaseComponentPlugin
          isUseTryCatch = true;
       }
 
+      this.pomMgr = pomMgr;
    }
 
    public void run() throws Exception
@@ -370,6 +375,7 @@ public class NewPortalConfigListener extends BaseComponentPlugin
       for (Page page : list)
       {
          dataStorage_.create(page);
+         pomMgr.getSession().save();
       }
    }
 
@@ -384,11 +390,13 @@ public class NewPortalConfigListener extends BaseComponentPlugin
       if (currentNavigation == null)
       {
          dataStorage_.create(navigation);
+//         pomMgr.getSession().save();
       }
       else
       {
          navigation.merge(currentNavigation);
          dataStorage_.save(navigation);
+         pomMgr.getSession().save();
       }
    }
 
@@ -403,6 +411,7 @@ public class NewPortalConfigListener extends BaseComponentPlugin
       for (PortletPreferences portlet : list)
       {
          dataStorage_.save(portlet);
+         pomMgr.getSession().save();
       }
    }
 
