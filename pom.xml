@@ -55,7 +55,7 @@
       <rhino.version>1.6R5</rhino.version>
       <org.codehaus.groovy.version>1.6.5</org.codehaus.groovy.version>
       <javax.servlet.version>2.5</javax.servlet.version>
-      <version.chromattic>1.0.4</version.chromattic>
+      <version.chromattic>1.0.8</version.chromattic>
       <version.reflect>1.0.0</version.reflect>
       <jcip.version>1.0</jcip.version>
 
