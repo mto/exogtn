@@ -58,7 +58,6 @@ public class UIUserToolBarDashboardPortlet extends UIPortletApplication
 
    public static String DEFAULT_TAB_NAME = "Tab_0";
    private final NodeFilter TOOLBAR_DASHBOARD_FILTER;
-   private static final Scope TOOLBAR_DASHBOARD_SCOPE = Scope.CHILDREN;
 
    public UIUserToolBarDashboardPortlet() throws Exception
    {
@@ -74,7 +73,7 @@ public class UIUserToolBarDashboardPortlet extends UIPortletApplication
       UserNavigation userNav = getCurrentUserNavigation();
       if (userNav != null)
       {
-         UserNode rootNodes = userPortal.getNode(userNav, TOOLBAR_DASHBOARD_SCOPE);
+         UserNode rootNodes = userPortal.getNode(userNav, Scope.GRANDCHILDREN);
          if (rootNodes != null)
          {
             rootNodes.filter(TOOLBAR_DASHBOARD_FILTER);
@@ -154,7 +153,7 @@ public class UIUserToolBarDashboardPortlet extends UIPortletApplication
             page.setName(_nodeName);
             toolBarPortlet.getApplicationComponent(DataStorage.class).create(page);
 
-            UserNode rootNode = userPortal.getNode(userNav, TOOLBAR_DASHBOARD_SCOPE);
+            UserNode rootNode = userPortal.getNode(userNav, Scope.CHILDREN);
             if (rootNode == null)
             {
                return;
