@@ -123,7 +123,7 @@ public class UIUserToolBarDashboardPortlet extends UIPortletApplication
          {
             PortalRequestContext prContext = Util.getPortalRequestContext();
             prContext.getResponse().sendRedirect(
-               prContext.getPortalURI() + nodes.iterator().next());
+               prContext.getPortalURI() + nodes.iterator().next().getURI());
          }
       }
 

@@ -482,10 +482,13 @@ public class UIPortalComponentActionListener
          UIPortal uiPortal = Util.getUIPortal();
          UIPortalApplication uiApp = uiPortal.getAncestorOfType(UIPortalApplication.class);
          UserPortalConfigService service = uiApp.getApplicationComponent(UserPortalConfigService.class);
+         PortalRequestContext context = Util.getPortalRequestContext();
          if (portalName != null
             && service.getUserPortalConfig(portalName, event.getRequestContext().getRemoteUser()) == null)
          {
             uiApp.addMessage(new ApplicationMessage("UISiteManagement.msg.portal-not-exist", new String[]{portalName}));
+            context.addUIComponentToUpdateByAjax(uiApp.findFirstComponentOfType(UIWorkingWorkspace.class));    
+            context.setFullRender(true);
             return;
          }
 
@@ -494,8 +497,7 @@ public class UIPortalComponentActionListener
          portalForm.setPortalOwner(portalName);
          portalForm.setBindingBean();
          uiMaskWS.setWindowSize(700, -1);
-         event.getRequestContext().addUIComponentToUpdateByAjax(uiMaskWS);
-
+         context.addUIComponentToUpdateByAjax(uiMaskWS);
       }
    }
 }
