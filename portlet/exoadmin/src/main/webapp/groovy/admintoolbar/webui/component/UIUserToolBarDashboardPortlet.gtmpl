@@ -42,10 +42,10 @@
 		String	href = Util.getPortalRequestContext().getPortalURI() + node.getURI();
 		String icon = node.getIcon();
 		if(icon == null) icon = "DefaultPageIcon";
-		boolean toolong = (node.resolvedLabel.length() > 60);
-		String label = ( toolong ? node.resolvedLabel.substring(0, 57) + "..." : node.resolvedLabel);
+		boolean toolong = (node.label.length() > 60);
+		String label = ( toolong ? node.label.substring(0, 57) + "..." : node.label);
 		String title = "";
-		if(toolong) title = "title='$node.resolvedLabel'";
+		if(toolong) title = "title='$node.label'";
 		else title = "";
 		print """
 			<div class="MenuItem $tabStyleNavigation">
