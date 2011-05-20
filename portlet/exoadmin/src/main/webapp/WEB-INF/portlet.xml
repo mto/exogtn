@@ -307,8 +307,13 @@
          <title>User Toolbar Site Portlet</title>
          <short-title>UserToolbarSite</short-title>
          <keywords>gatein_internal</keywords>
-      </portlet-info>
-
+      </portlet-info>		      
+      <portlet-preferences>
+        <preference>
+	      <name>level</name>
+	      <value>2</value>
+        </preference>
+      </portlet-preferences>
       <security-role-ref>
          <role-name>admin</role-name>
          <role-link>admin</role-link>
@@ -368,7 +373,12 @@
          <short-title>UserToolbarGroup</short-title>
          <keywords>gatein_internal</keywords>
       </portlet-info>
-
+      <portlet-preferences>
+        <preference>
+	      <name>level</name>
+	      <value>2</value>
+        </preference>
+      </portlet-preferences>
       <security-role-ref>
          <role-name>admin</role-name>
          <role-link>admin</role-link>
