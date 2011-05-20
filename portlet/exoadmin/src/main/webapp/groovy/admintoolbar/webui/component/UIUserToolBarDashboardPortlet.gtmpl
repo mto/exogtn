@@ -4,6 +4,8 @@
 	import org.exoplatform.webui.organization.OrganizationUtils;
 	import org.exoplatform.portal.mop.user.UserNode;
 	import java.util.Collection;
+	import javax.portlet.MimeResponse;
+	import javax.portlet.ResourceURL;
 	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -47,8 +49,17 @@
 		String title = "";
 		if(toolong) title = "title='$node.label'";
 		else title = "";
+		
+		def getNodeURL = "";
+		if (hasChild) {
+			MimeResponse res = _ctx.getRequestContext().getResponse();
+			ResourceURL resourceURL = res.createResourceURL();
+			resourceURL.setResourceID(res.encodeURL(node.getURI()));	
+			getNodeURL = "exo:getNodeURL='" + resourceURL.toString() + "'";
+		}
+		
 		print """
-			<div class="MenuItem $tabStyleNavigation">
+			<div class="MenuItem $tabStyleNavigation" $getNodeURL>
 				<div class="$clazz">
 		""";
 						if(node.pageRef != null) {
