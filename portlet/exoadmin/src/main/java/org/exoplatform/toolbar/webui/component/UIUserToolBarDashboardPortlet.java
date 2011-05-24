@@ -28,7 +28,6 @@ import org.exoplatform.portal.config.model.Page;
 import org.exoplatform.portal.mop.SiteKey;
 import org.exoplatform.portal.mop.Visibility;
 import org.exoplatform.portal.mop.navigation.Scope;
-import org.exoplatform.portal.mop.user.NavigationPath;
 import org.exoplatform.portal.mop.user.UserNavigation;
 import org.exoplatform.portal.mop.user.UserNode;
 import org.exoplatform.portal.mop.user.UserNodeFilterConfig;
@@ -81,7 +80,7 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
    }
 
    @Override
-   protected NavigationPath getPathFromResourceID(String resourceId) throws Exception
+   protected UserNode getPathFromResourceID(String resourceId) throws Exception
    {
       UserNavigation currNav = getCurrentUserNavigation();
       if (currNav == null) return null;
