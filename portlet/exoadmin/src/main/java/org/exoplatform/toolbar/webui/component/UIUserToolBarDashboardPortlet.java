@@ -31,7 +31,7 @@ import org.exoplatform.portal.mop.navigation.Scope;
 import org.exoplatform.portal.mop.user.NavigationPath;
 import org.exoplatform.portal.mop.user.UserNavigation;
 import org.exoplatform.portal.mop.user.UserNode;
-import org.exoplatform.portal.mop.user.UserNodePredicate;
+import org.exoplatform.portal.mop.user.UserNodeFilterConfig;
 import org.exoplatform.portal.mop.user.UserPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
@@ -58,7 +58,7 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
 
    public UIUserToolBarDashboardPortlet() throws Exception
    {
-      UserNodePredicate.Builder builder = UserNodePredicate.builder();
+      UserNodeFilterConfig.Builder builder = UserNodeFilterConfig.builder();
       builder.withAuthorizationCheck().withVisibility(Visibility.DISPLAYED, Visibility.TEMPORAL);
       builder.withTemporalCheck();
       toolbarFilter = getUserPortal().createFilter(builder.build());      
@@ -87,7 +87,7 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
       if (currNav == null) return null;
     
       UserPortal userPortal = getUserPortal(); 
-      return userPortal.resolvePath(currNav, resourceId);   
+      return userPortal.resolvePath(currNav, null, resourceId);
    }
    
    static public class AddDashboardActionListener extends EventListener<UIUserToolBarDashboardPortlet>
@@ -141,7 +141,7 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
             page.setName(_nodeName);
             toolBarPortlet.getApplicationComponent(DataStorage.class).create(page);
 
-            UserNode rootNode = userPortal.getNode(userNav, Scope.CHILDREN, null);
+            UserNode rootNode = userPortal.getNode(userNav, Scope.CHILDREN, null, null);
             if (rootNode == null)
             {
                return;
