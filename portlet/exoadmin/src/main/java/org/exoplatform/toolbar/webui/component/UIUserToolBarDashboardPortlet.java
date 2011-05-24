@@ -151,7 +151,7 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
             tabNode.setLabel(prContext.getApplicationResourceBundle().getString("UIUserToolBarDashboard.page.ClickAndType"));           
             tabNode.setPageRef(page.getPageId());
 
-            rootNode.save();            
+            rootNode.save();
             prContext.getResponse().sendRedirect(prContext.getPortalURI() + tabNode.getURI());
          }
          catch (Exception ex)
