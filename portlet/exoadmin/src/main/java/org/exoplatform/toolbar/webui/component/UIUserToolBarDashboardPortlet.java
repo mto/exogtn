@@ -60,7 +60,7 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
       UserNodeFilterConfig.Builder builder = UserNodeFilterConfig.builder();
       builder.withAuthorizationCheck().withVisibility(Visibility.DISPLAYED, Visibility.TEMPORAL);
       builder.withTemporalCheck();
-      toolbarFilter = getUserPortal().createFilter(builder.build());      
+      toolbarFilterConfig = builder.build();      
    }
 
    public UserNavigation getCurrentUserNavigation() throws Exception
@@ -80,13 +80,13 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
    }
 
    @Override
-   protected UserNode getPathFromResourceID(String resourceId) throws Exception
+   protected UserNode getNodeFromResourceID(String resourceId) throws Exception
    {
       UserNavigation currNav = getCurrentUserNavigation();
       if (currNav == null) return null;
     
       UserPortal userPortal = getUserPortal(); 
-      return userPortal.resolvePath(currNav, null, resourceId);
+      return userPortal.resolvePath(currNav, toolbarFilterConfig, resourceId);
    }
    
    static public class AddDashboardActionListener extends EventListener<UIUserToolBarDashboardPortlet>
@@ -140,17 +140,12 @@ public class UIUserToolBarDashboardPortlet extends BasePartialUpdateToolbar
             page.setName(_nodeName);
             toolBarPortlet.getApplicationComponent(DataStorage.class).create(page);
 
-            UserNode rootNode = userPortal.getNode(userNav, Scope.CHILDREN, null, null);
-            if (rootNode == null)
-            {
-               return;
-            }
-            rootNode.filter(toolBarPortlet.toolbarFilter);
+            UserNode rootNode = userPortal.getNode(userNav, Scope.CHILDREN, toolBarPortlet.toolbarFilterConfig, null);
             UserNode tabNode = rootNode.addChild(_nodeName);
             tabNode.setLabel(prContext.getApplicationResourceBundle().getString("UIUserToolBarDashboard.page.ClickAndType"));           
             tabNode.setPageRef(page.getPageId());
 
-            rootNode.save();
+            userPortal.saveNode(rootNode, null);
             prContext.getResponse().sendRedirect(prContext.getPortalURI() + tabNode.getURI());
          }
          catch (Exception ex)
