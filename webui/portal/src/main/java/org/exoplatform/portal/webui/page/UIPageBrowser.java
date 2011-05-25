@@ -19,6 +19,10 @@
 
 package org.exoplatform.portal.webui.page;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import org.exoplatform.commons.serialization.api.annotations.Serialized;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.commons.utils.PageListAccess;
@@ -69,10 +73,6 @@ import org.exoplatform.webui.form.UIFormInputSet;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UISearchForm;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
 
 @ComponentConfigs({
    @ComponentConfig(template = "system:/groovy/portal/webui/page/UIPageBrowser.gtmpl", events = {
@@ -336,7 +336,6 @@ public class UIPageBrowser extends UISearch
          {
             return;
          }
-         rootNode.filter(userPortal.createFilter(UserNodeFilterConfig.builder().build()));
 
          for (UserNode userNode : rootNode.getChildren())
          {
@@ -344,7 +343,7 @@ public class UIPageBrowser extends UISearch
             {
                // Remove pageNode
                rootNode.removeChild(userNode.getName());
-               rootNode.save();
+               userPortal.saveNode(rootNode, null);
 
                // Update navigation and UserToolbarGroupPortlet
 
