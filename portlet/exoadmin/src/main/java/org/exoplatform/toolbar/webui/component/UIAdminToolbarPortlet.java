@@ -66,7 +66,11 @@ public class UIAdminToolbarPortlet extends UIPortletApplication
 
    private boolean hasEditPermissionOnNavigation() throws Exception
    {
-      UserNavigation selectedNavigation = getSelectedNavigation();               
+      UserNavigation selectedNavigation = getSelectedNavigation();
+      if (selectedNavigation == null)
+      {
+         return false;
+      }
       return selectedNavigation.isModifiable();
    }
    
