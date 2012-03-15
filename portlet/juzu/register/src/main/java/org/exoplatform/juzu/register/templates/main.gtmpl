@@ -1,0 +1,11 @@
+<div class="UIFormWithTitle">
+	<div class="TitleBar">Create a new account</div>
+	<div class="HorizontalLayout">
+		<div id="result">
+		</div>
+		
+		<div class="FormContainer">
+		#{include path=form.gtmpl/}
+		</div>
+	</div>
+</div>
