@@ -109,7 +109,7 @@ public class SitemapController extends Controller
       }
       return Response.status(404);
    }
-
+   
    private UserNode updateNode(UserNode node) throws Exception
    {
       if (node == null)
@@ -158,7 +158,7 @@ public class SitemapController extends Controller
       return b.toString();
    }
 
-   private void travelNode(TreeNode rootNode, NodeURL nodeURL, StringBuilder b)
+   private void travelNode(TreeNode rootNode, NodeURL nodeURL, StringBuilder b) throws Exception
    {
       List<TreeNode> children = rootNode.getChildren();
 
@@ -191,6 +191,12 @@ public class SitemapController extends Controller
                      : " class='hitarea expandable-hitarea'>").append("</div>");
             if (actionLink != null)
             {
+            	if(actionLink.equals(Util.getPortalRequestContext().getRequestURI())) 
+            	{
+            		UserNode updateNode = updateNode(node);
+            		if(updateNode != null)
+            			child.setChildren(updateNode.getChildren());
+            	}
                b.append("<a href='").append(actionLink).append("'>").append(label).append("</a>");
             }
             else
