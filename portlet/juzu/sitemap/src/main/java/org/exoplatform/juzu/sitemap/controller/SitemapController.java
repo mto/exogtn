@@ -25,9 +25,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.portlet.PortletPreferences;
 
+import org.exoplatform.juzu.sitemap.Session;
 import org.exoplatform.portal.mop.SiteType;
 import org.exoplatform.portal.mop.Visibility;
 import org.exoplatform.portal.mop.navigation.GenericScope;
+import org.exoplatform.portal.mop.navigation.NodeChange;
+import org.exoplatform.portal.mop.navigation.NodeChangeQueue;
 import org.exoplatform.portal.mop.navigation.Scope;
 import org.exoplatform.portal.mop.user.UserNavigation;
 import org.exoplatform.portal.mop.user.UserNode;
@@ -39,8 +42,10 @@ import org.exoplatform.web.url.navigation.NodeURL;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.juzu.Controller;
 import org.juzu.Path;
+import org.juzu.Resource;
+import org.juzu.Response;
 import org.juzu.View;
-import org.juzu.template.Template;
+import org.juzu.plugin.ajax.Ajax;
 
 /**
  * @author <a href="mailto:haithanh0809@gmail.com">Hai Thanh Nguyen</a>
@@ -55,12 +60,13 @@ public class SitemapController extends Controller
 
    private UserNodeFilterConfig NAVIGATION_FILTER_CONFIG;
 
-   private TreeNode treeNode;
-
    private Scope scope;
 
    @Inject
-   private SitemapController(PortletPreferences preferences)
+   Session session;
+
+   @Inject
+   private SitemapController(PortletPreferences preferences) throws Exception
    {
       UserNodeFilterConfig.Builder filterConfigBuilder = UserNodeFilterConfig.builder();
       filterConfigBuilder.withReadWriteCheck().withVisibility(Visibility.DISPLAYED, Visibility.TEMPORAL);
@@ -77,15 +83,78 @@ public class SitemapController extends Controller
    @View
    public void index() throws Exception
    {
+      loadTreeNodes();
       index.with().controller(this).render();
+   }
+
+   @Ajax
+   @Resource
+   public Response loadChild(String id) throws Exception
+   {
+      TreeNode node = session.getTreeNode().findNodes(id);
+      if(node != null)
+      {
+         if (node.isExpanded())
+            return null;
+         UserNode userNode = updateNode(node.getNode());
+         if (userNode != null)
+         {
+            node.setExpanded(true);
+            node.setChildren(userNode.getChildren());
+         }
+         StringBuilder b = new StringBuilder();
+         NodeURL nodeURL = WebuiRequestContext.getCurrentInstance().createURL(NodeURL.TYPE);
+         travelNode(node, nodeURL, b);
+         return Response.ok(b.toString());
+      }
+      return Response.status(404);
+   }
+
+   private UserNode updateNode(UserNode node) throws Exception
+   {
+      if (node == null)
+      {
+         return null;
+      }
+      UserPortal userPortal = Util.getPortalRequestContext().getUserPortalConfig().getUserPortal();
+      NodeChangeQueue<UserNode> queue = new NodeChangeQueue<UserNode>();
+      userPortal.updateNode(node, scope, queue);
+      for (NodeChange<UserNode> change : queue)
+      {
+         if (change instanceof NodeChange.Removed)
+         {
+            UserNode deletedNode = ((NodeChange.Removed<UserNode>)change).getTarget();
+            if (hasRelationship(deletedNode, node))
+            {
+               // Node has been deleted
+               return null;
+            }
+         }
+      }
+      return node;
+   }
+
+   private boolean hasRelationship(UserNode parent, UserNode userNode)
+   {
+      if (parent.getId().equals(userNode.getId()))
+      {
+         return true;
+      }
+      for (UserNode child : parent.getChildren())
+      {
+         if (hasRelationship(child, userNode))
+         {
+            return true;
+         }
+      }
+      return false;
    }
 
    public String treeView() throws Exception
    {
       StringBuilder b = new StringBuilder();
-      loadTreeNodes();
       NodeURL nodeURL = WebuiRequestContext.getCurrentInstance().createURL(NodeURL.TYPE);
-      travelNode(treeNode, nodeURL, b);
+      travelNode(session.getTreeNode(), nodeURL, b);
       return b.toString();
    }
 
@@ -98,6 +167,7 @@ public class SitemapController extends Controller
       {
          size++;
          UserNode node = child.getNode();
+         String id = node.getId();
          String label = node.getEncodedResolvedLabel();
          String actionLink = null;
          if (node.getPageRef() != null)
@@ -109,11 +179,16 @@ public class SitemapController extends Controller
          if (child.hasChild())
          {
             b.append("<li")
-               .append(size == children.size() ? " class=\"expandable lastExpandable\">" : " class=\"expandable\">")
+               .append(" id='")
+               .append(id)
+               .append("-")
+               .append(System.currentTimeMillis())
+               .append("'")
+               .append(size == children.size() ? " class='expandable lastExpandable'>" : " class='expandable'>")
                .append("<div")
                .append(
-                  size == children.size() ? " class=\"hitarea expandable-hitarea lastExpandable-hitarea\">"
-                     : " class=\"hitarea expandable-hitarea\">").append("</div>");
+                  size == children.size() ? " class='hitarea expandable-hitarea lastExpandable-hitarea'>"
+                     : " class='hitarea expandable-hitarea'>").append("</div>");
             if (actionLink != null)
             {
                b.append("<a href='").append(actionLink).append("'>").append(label).append("</a>");
@@ -137,7 +212,7 @@ public class SitemapController extends Controller
 
    private void loadTreeNodes() throws Exception
    {
-      treeNode = new TreeNode();
+      TreeNode treeNode = new TreeNode();
 
       UserPortal userPortal = Util.getPortalRequestContext().getUserPortalConfig().getUserPortal();
       List<UserNavigation> listNavigations = userPortal.getNavigations();
@@ -159,6 +234,7 @@ public class SitemapController extends Controller
          }
       }
       treeNode.setChildren(childNodes);
+      session.setTreeNode(treeNode);
    }
 
    private List<UserNavigation> rearrangeNavigations(List<UserNavigation> listNavigation)
