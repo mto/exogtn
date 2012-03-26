@@ -48,6 +48,7 @@
 				<input type="text" id="emailAddress" name="emailAddress"/>
 			</td>
 		</tr>
+        <% if(useCaptcha){ %>
 		<tr>
 			<td class="FieldLabel">
 				<label for="captcha">Text Validation(*)</label>
@@ -60,6 +61,7 @@
 				</div>
 			</td>
 		</tr>
+        <%} %>
 	</table>
 	<div class="UIAction">
 		<a class="ActionButton LightBlueStyle" id="subscribe">Subscribe</a>

@@ -26,7 +26,7 @@ jQuery(function() {
 	});
 
 	$('.jz').on("click", "#subscribe", function() {
-		$("form").submit();
+		$("#form").submit();
 	});
 
 	var msg;

@@ -1,3 +1,5 @@
+#{param name=useCaptcha/}
+
 <div class="UIFormWithTitle">
 	<div class="TitleBar">Create a new account</div>
 	<div class="HorizontalLayout">

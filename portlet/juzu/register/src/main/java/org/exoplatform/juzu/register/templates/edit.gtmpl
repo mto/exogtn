@@ -1,0 +1,13 @@
+<div class="UIFormWithTitle">
+  <div class="TitleBar">Create a new account</div>
+  <div class="HorizontalLayout">
+    <div class="FormContainer">
+      <form action="@{RegisterController.edit()}" method="post">
+        <label for="captcha">User captcha:</label>
+        <input id="captcha" name="captcha" type="checkbox" checked="checked"/>
+        <input type="submit" value="Submit"/>
+      </form>
+    </div>
+  </div>
+</div>
+<a href="@{RegisterController.edit()}">JUMP</a>

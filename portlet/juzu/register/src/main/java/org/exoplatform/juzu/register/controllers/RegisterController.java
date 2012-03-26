@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletPreferences;
 
 import nl.captcha.Captcha;
 import nl.captcha.servlet.CaptchaServletUtil;
@@ -41,6 +43,7 @@ import org.exoplatform.webui.form.validator.NaturalLanguageValidator;
 import org.exoplatform.webui.form.validator.PasswordStringLengthValidator;
 import org.exoplatform.webui.form.validator.UsernameValidator;
 import org.exoplatform.webui.form.validator.Validator;
+import org.juzu.Action;
 import org.juzu.Controller;
 import org.juzu.Path;
 import org.juzu.Resource;
@@ -48,6 +51,7 @@ import org.juzu.Response;
 import org.juzu.View;
 import org.juzu.io.CharStream;
 import org.juzu.plugin.ajax.Ajax;
+import org.juzu.portlet.JuzuPortlet;
 import org.juzu.template.Template;
 
 /**
@@ -60,13 +64,20 @@ public class RegisterController extends Controller
 
    @Inject
    @Path("main.gtmpl")
-   Template main;
+   org.exoplatform.juzu.register.templates.main main;
+   
+   @Inject
+   @Path("edit.gtmpl")
+   Template edit;
 
    @Inject
    OrganizationService organizationService;
 
    @Inject
    Flash flash;
+   
+   @Inject
+   PortletPreferences preferences;
 
    private Map<String, Validator> validators;
 
@@ -82,9 +93,23 @@ public class RegisterController extends Controller
    @View
    public void index()
    {
-      main.render();
+		if (renderContext.getProperty(JuzuPortlet.PORTLET_MODE) == PortletMode.VIEW) 
+		{
+			main.with().useCaptcha(Boolean.parseBoolean(preferences.getValue("captcha", "true"))).render();
+		}
+		else if (renderContext.getProperty(JuzuPortlet.PORTLET_MODE) == PortletMode.EDIT)
+		{
+			edit.render();
+		}
    }
-
+   
+   @Action
+   public Response edit(String captcha) throws Exception {
+   	preferences.setValue("captcha", captcha == null ? "false" : "true");
+   	preferences.store();
+   	return RegisterController_.index().setProperty(JuzuPortlet.PORTLET_MODE, PortletMode.VIEW);
+   }
+   
    private Response.Resource<CharStream> createJSON(final Map<String, String> data)
    {
       Response.Resource<CharStream> json = new Response.Resource<CharStream>()
@@ -197,9 +222,10 @@ public class RegisterController extends Controller
    public Response saveUser(String username, String password, String confirmPassword, String firstName,
       String lastName, String emailAddress, String captcha)
    {
+   	boolean useCaptcha = Boolean.parseBoolean(preferences.getValue("captcha", "true"));
       try
       {
-         if (!captcha.equals(flash.getCaptcha()))
+         if (!captcha.equals(flash.getCaptcha()) && useCaptcha)
          {
             return Response.ok("<strong>Captcha is incorrect</strong>");
          }
