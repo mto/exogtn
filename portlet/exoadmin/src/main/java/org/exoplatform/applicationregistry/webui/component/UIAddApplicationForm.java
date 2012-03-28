@@ -48,6 +48,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTableInputSet;
+import org.exoplatform.webui.form.validator.NotHTMLTagValidator;
 import org.exoplatform.webui.form.validator.StringLengthValidator;
 import org.gatein.common.i18n.LocalizedString;
 import org.gatein.pc.api.Portlet;
@@ -83,7 +84,8 @@ public class UIAddApplicationForm extends UIForm
 
    public UIAddApplicationForm() throws Exception
    {
-      addUIFormInput(new UIFormStringInput(FIELD_NAME, null, null).addValidator(StringLengthValidator.class, 3, 30));
+      addUIFormInput(new UIFormStringInput(FIELD_NAME, null, null).addValidator(StringLengthValidator.class, 3, 30)
+         .addValidator(NotHTMLTagValidator.class));
       List<SelectItemOption<String>> types = new ArrayList<SelectItemOption<String>>(3);
       types.add(new SelectItemOption<String>(ApplicationType.PORTLET.getName()));
       types.add(new SelectItemOption<String>(ApplicationType.GADGET.getName()));
