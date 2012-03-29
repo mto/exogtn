@@ -25,48 +25,48 @@
     </dependency>
   </dependencies>
 
+	<properties>
+		<source.path>${project.basedir}/src/main/java</source.path>
+	</properties>
+
   <build>
     <finalName>juzu-sitemap</finalName>
-    <plugins>
 
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerArguments>
-            <sourcepath>${project.basedir}/src/main/java</sourcepath>
-          </compilerArguments>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <webResources>
-            <resource>
-              <targetPath>WEB-INF/src</targetPath>
-              <directory>src/main/java</directory>
-            </resource>
-          </webResources>
-        </configuration>
-        <executions>
-          <execution>
-            <id>gatein</id>
-            <configuration>
-              <classifier>gatein</classifier>
-              <webappDirectory>${project.build.directory}/gatein</webappDirectory>
-              <overlays>
-                <overlay>
-                  <groupId>org.juzu</groupId>
-                  <artifactId>juzu-overlay-gatein</artifactId>
-                </overlay>
-              </overlays>
-            </configuration>
-            <goals>
-              <goal>war</goal>
-            </goals>
-          </execution>
-        </executions>
-	  </plugin>
-    </plugins>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webResources>
+						<resource>
+							<targetPath>WEB-INF/src</targetPath>
+							<directory>src/main/java</directory>
+						</resource>
+						<resource>
+							<targetPath>WEB-INF</targetPath>
+							<directory>src/main/webapp/WEB-INF</directory>
+							<filtering>true</filtering>
+						</resource>
+					</webResources>
+				</configuration>
+				<executions>
+					<execution>
+						<id>gatein</id>
+						<configuration>
+							<classifier>gatein</classifier>
+							<webappDirectory>${project.build.directory}/gatein</webappDirectory>
+							<overlays>
+								<overlay>
+									<groupId>org.juzu</groupId>
+									<artifactId>juzu-overlay-gatein</artifactId>
+								</overlay>
+							</overlays>
+						</configuration>
+						<goals>
+							<goal>war</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
   </build>
 </project>
